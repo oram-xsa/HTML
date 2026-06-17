@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="en" data-brand="claroty" data-mantine-color-scheme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>xDome Secure Access - Entry Point Demo</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --header-bg: #2D1B4E;
+            --header-text: #FFFFFF;
+            --nav-active-underline: #00C48C;
+            --primary-purple: #4C338A;
+            --primary-purple-hover: #3B276B;
+            --primary-purple-light: rgba(76, 51, 138, 0.08);
+            --green-badge-bg: #EBFBEE;
+            --green-badge-text: #2B8A3E;
+            --gray-1: #F8F9FA;
+            --gray-2: #E9ECEF;
+            --gray-3: #DEE2E6;
+            --gray-5: #ADB5BD;
+            --gray-7: #495057;
+            --gray-9: #212529;
+            --white: #FFFFFF;
+            --font: 'Montserrat', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: var(--font);
+            background: var(--gray-1);
+            color: var(--gray-9);
+            min-height: 100vh;
+        }
+
+        /* HEADER */
+        .app-header {
+            background: var(--header-bg);
+            height: 56px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 24px;
+            position: sticky;
+            top: 0;
+            z-index: 200;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 40px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--header-text);
+            font-size: 14px;
+            font-weight: 600;
+            text-decoration: none;
+            white-space: nowrap;
+        }
+
+        .brand-icon {
+            width: 28px;
+            height: 28px;
+            flex-shrink: 0;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 32px;
+            height: 56px;
+            align-items: center;
+        }
+
+        .nav-link {
+            color: rgba(255,255,255,0.7);
+            font-size: 13px;
+            font-weight: 500;
+            text-decoration: none;
+            cursor: pointer;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            border-bottom: 2px solid transparent;
+            transition: color 0.15s, border-color 0.15s;
+        }
+
+        .nav-link:hover { color: var(--header-text); }
+
+        .nav-link.active {
+            color: var(--header-text);
+            border-bottom-color: var(--nav-active-underline);
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .header-user {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .header-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .header-avatar svg {
+            width: 18px;
+            height: 18px;
+            fill: var(--header-text);
+        }
+
+        .header-user-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header-user-name {
+            color: var(--header-text);
+            font-size: 12px;
+            font-weight: 600;
+            max-width: 120px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .header-user-role {
+            color: rgba(255,255,255,0.6);
+            font-size: 11px;
+        }
+
+        .header-user-chevron {
+            color: rgba(255,255,255,0.5);
+            width: 14px;
+            height: 14px;
+            transition: transform 0.2s;
+        }
+
+        .header-user.open .header-user-chevron {
+            transform: rotate(180deg);
+        }
+
+        .btn-disconnect {
+            background: transparent;
+            border: 1px solid rgba(255,255,255,0.3);
+            color: var(--header-text);
+            font-size: 12px;
+            font-weight: 500;
+            font-family: var(--font);
+            padding: 6px 14px;
+            border-radius: 6px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: background 0.15s, border-color 0.15s;
+        }
+
+        .btn-disconnect:hover {
+            background: rgba(255,255,255,0.1);
+            border-color: rgba(255,255,255,0.5);
+        }
+
+        /* USER DROPDOWN */
+        .user-dropdown {
+            position: absolute;
+            top: calc(100% + 8px);
+            right: 0;
+            background: var(--white);
+            border: 1px solid var(--gray-2);
+            border-radius: 8px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+            min-width: 260px;
+            z-index: 300;
+            display: none;
+            animation: dropIn 0.15s ease;
+        }
+
+        .user-dropdown.open {
+            display: block;
+        }
+
+        @keyframes dropIn {
+            from { opacity: 0; transform: translateY(-4px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .dropdown-user-section {
+            padding: 16px;
+            border-bottom: 1px solid var(--gray-2);
+        }
+
+        .dropdown-user-email {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--gray-9);
+        }
+
+        .dropdown-user-role {
+            font-size: 11px;
+            color: var(--gray-7);
+            margin-top: 2px;
+        }
+
+        .dropdown-items {
+            padding: 6px 0;
+        }
+
+        .dropdown-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 16px;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--gray-9);
+            cursor: pointer;
+            transition: background 0.1s;
+            text-decoration: none;
+        }
+
+        .dropdown-item:hover {
+            background: var(--gray-1);
+        }
+
+        .dropdown-item svg {
+            width: 16px;
+            height: 16px;
+            color: var(--gray-7);
+            flex-shrink: 0;
+        }
+
+        .dropdown-divider {
+            height: 1px;
+            background: var(--gray-2);
+            margin: 4px 0;
+        }
+
+        .dropdown-item.admin-highlight {
+            color: var(--primary-purple);
+            font-weight: 600;
+        }
+
+        .dropdown-item.admin-highlight svg {
+            color: var(--primary-purple);
+        }
+
+        .admin-badge {
+            font-size: 10px;
+            font-weight: 700;
+            background: var(--primary-purple-light);
+            color: var(--primary-purple);
+            padding: 2px 6px;
+            border-radius: 4px;
+            margin-left: auto;
+        }
+
+        .external-icon {
+            width: 12px !important;
+            height: 12px !important;
+            color: var(--gray-5) !important;
+            margin-left: 4px;
+        }
+
+        .dropdown-item.logout {
+            color: #C92A2A;
+        }
+
+        .dropdown-item.logout svg {
+            color: #C92A2A;
+        }
+
+        /* CONTEXT TOOLBAR */
+        .context-toolbar {
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 24px;
+            background: var(--white);
+            border-bottom: 1px solid var(--gray-2);
+        }
+
+        .breadcrumbs {
+            font-size: 13px;
+            color: var(--gray-9);
+            font-weight: 600;
+        }
+
+        /* MAIN CONTENT placeholder */
+        .main-content {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 32px;
+        }
+
+        .placeholder-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin-bottom: 24px;
+        }
+
+        .placeholder-card {
+            background: var(--white);
+            border: 1px solid var(--gray-2);
+            border-radius: 8px;
+            padding: 24px;
+            min-height: 100px;
+        }
+
+        .placeholder-card h3 {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--gray-9);
+            margin-bottom: 8px;
+        }
+
+        .placeholder-card .stats {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--primary-purple);
+        }
+
+        .placeholder-card .stats-label {
+            font-size: 12px;
+            color: var(--gray-7);
+        }
+
+        .tabs-placeholder {
+            display: flex;
+            gap: 0;
+            border-bottom: 2px solid var(--gray-2);
+            margin-bottom: 24px;
+        }
+
+        .tab-ph {
+            padding: 10px 20px;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--gray-7);
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            margin-bottom: -2px;
+        }
+
+        .tab-ph.active {
+            color: var(--primary-purple);
+            border-bottom-color: var(--primary-purple);
+        }
+
+        .table-placeholder {
+            background: var(--white);
+            border: 1px solid var(--gray-2);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .table-placeholder .th-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1.5fr 1fr 1fr;
+            background: var(--header-bg);
+            color: var(--white);
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .table-placeholder .th-row span {
+            padding: 10px 14px;
+        }
+
+        .table-placeholder .td-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1.5fr 1fr 1fr;
+            border-bottom: 1px solid var(--gray-2);
+            font-size: 12px;
+        }
+
+        .table-placeholder .td-row span {
+            padding: 10px 14px;
+        }
+
+        .badge-sm {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 2px 8px;
+            border-radius: 100px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .badge-sm.green {
+            background: var(--green-badge-bg);
+            color: var(--green-badge-text);
+        }
+
+        .badge-sm.purple {
+            background: var(--primary-purple-light);
+            color: var(--primary-purple);
+        }
+
+        /* Annotation callout */
+        .callout-arrow {
+            position: fixed;
+            top: 52px;
+            right: 140px;
+            z-index: 400;
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
+        }
+
+        .callout-box {
+            background: var(--primary-purple);
+            color: var(--white);
+            padding: 10px 16px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            box-shadow: 0 4px 12px rgba(76, 51, 138, 0.3);
+            white-space: nowrap;
+            position: relative;
+        }
+
+        .callout-box::after {
+            content: '';
+            position: absolute;
+            top: 12px;
+            right: -6px;
+            width: 12px;
+            height: 12px;
+            background: var(--primary-purple);
+            transform: rotate(45deg);
+        }
+
+        /* Click overlay when dropdown is open */
+        .overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 250;
+            display: none;
+        }
+
+        .overlay.open {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ANNOTATION -->
+    <div class="callout-arrow" id="callout">
+        <div class="callout-box">Click the user menu to see the entry point</div>
+    </div>
+
+    <!-- Click overlay to close dropdown -->
+    <div class="overlay" id="overlay" onclick="toggleDropdown(false)"></div>
+
+    <!-- HEADER -->
+    <header class="app-header">
+        <div class="header-left">
+            <a class="brand" href="#">
+                <svg class="brand-icon" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M8.1377 1C8.90121 1 9.7923 1.28458 10.7178 2.12695L10.2197 2.67285C10.7519 2.70844 13.1348 3.02891 13.3662 5.92383L13.9219 5.36621C13.9284 5.3729 16.3591 7.84918 13.8984 10.6572L13.3779 10.1475C13.1581 12.9593 10.9369 13.3508 10.2891 13.4102L10.7178 13.873C9.7923 14.7273 8.91278 15 8.1377 15V11.583H7.97559C6.09005 11.5829 4.56353 10.0051 4.56348 8.07129C4.56348 6.13746 6.09002 4.55968 7.97559 4.55957H8.1377V1ZM7.16602 3.63379C5.09526 3.96599 3.51074 5.79322 3.51074 8C3.51074 10.2068 5.09526 12.0459 7.16602 12.3662V14.9648C3.70705 14.6208 1 11.6424 1 8C1 4.35763 3.70705 1.37922 7.16602 1.03516V3.63379Z" fill="currentColor"/>
+                </svg>
+                Claroty xDome Secure Access
+            </a>
+            <nav class="nav-links">
+                <a class="nav-link active" href="#">Home</a>
+                <a class="nav-link" href="#">Devices</a>
+                <a class="nav-link" href="#">Files</a>
+                <a class="nav-link" href="#">Monitoring</a>
+                <a class="nav-link" href="#">User Management</a>
+                <a class="nav-link" href="#">Settings</a>
+            </nav>
+        </div>
+        <div class="header-right">
+            <div class="header-user" id="user-menu-trigger" onclick="toggleDropdown()">
+                <div class="header-avatar">
+                    <svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><path d="M8.1377 1C8.90121 1 9.7923 1.28458 10.7178 2.12695L10.2197 2.67285C10.7519 2.70844 13.1348 3.02891 13.3662 5.92383L13.9219 5.36621C13.9284 5.3729 16.3591 7.84918 13.8984 10.6572L13.3779 10.1475C13.1581 12.9593 10.9369 13.3508 10.2891 13.4102L10.7178 13.873C9.7923 14.7273 8.91278 15 8.1377 15V11.583H7.97559C6.09005 11.5829 4.56353 10.0051 4.56348 8.07129C4.56348 6.13746 6.09002 4.55968 7.97559 4.55957H8.1377V1ZM7.16602 3.63379C5.09526 3.96599 3.51074 5.79322 3.51074 8C3.51074 10.2068 5.09526 12.0459 7.16602 12.3662V14.9648C3.70705 14.6208 1 11.6424 1 8C1 4.35763 3.70705 1.37922 7.16602 1.03516V3.63379Z"/></svg>
+                </div>
+                <div class="header-user-info">
+                    <span class="header-user-name">or.am@claroty.com</span>
+                    <span class="header-user-role">Access Manager</span>
+                </div>
+                <svg class="header-user-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+
+                <!-- USER DROPDOWN -->
+                <div class="user-dropdown" id="user-dropdown">
+                    <div class="dropdown-user-section">
+                        <div class="dropdown-user-email">or.am@claroty.com</div>
+                        <div class="dropdown-user-role">Admin - Access Manager</div>
+                    </div>
+                    <div class="dropdown-items">
+                        <a class="dropdown-item" href="#">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                            My Profile
+                        </a>
+                        <a class="dropdown-item" href="#">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+                            Personal Settings
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <!-- ADMIN ONLY: Maintenance Dashboard -->
+                        <a class="dropdown-item admin-highlight" href="maintenance-dashboard.html" target="_blank">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.24 6.24a2.12 2.12 0 01-3-3l6.24-6.24A6 6 0 0114.7 6.3z"/></svg>
+                            Maintenance Dashboard
+                            <span class="admin-badge">Admin</span>
+                            <svg class="external-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3"/></svg>
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="#">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                            About
+                        </a>
+                        <a class="dropdown-item logout" href="#">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg>
+                            Log Out
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <button class="btn-disconnect">
+                <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5.12 4.41A6.13 6.13 0 003.2 8.34c0 2.7 2.15 4.9 4.8 4.9s4.8-2.2 4.8-4.9a4.9 4.9 0 00-1.67-3.8"/><path d="M8 1v5.4"/></svg>
+                Disconnect All
+            </button>
+        </div>
+    </header>
+
+    <!-- CONTEXT TOOLBAR -->
+    <div class="context-toolbar">
+        <div class="breadcrumbs">Home</div>
+    </div>
+
+    <!-- MAIN PAGE (simulated Home) -->
+    <div class="main-content">
+        <div class="placeholder-grid">
+            <div class="placeholder-card">
+                <h3>Web Access</h3>
+                <div class="stats">0</div>
+                <div class="stats-label">Active Sessions</div>
+            </div>
+            <div class="placeholder-card">
+                <h3>Micro Tunnel</h3>
+                <div class="stats">0</div>
+                <div class="stats-label">Active Sessions</div>
+            </div>
+        </div>
+
+        <div class="tabs-placeholder">
+            <div class="tab-ph active">Pending Access Requests</div>
+            <div class="tab-ph">Active Sessions</div>
+        </div>
+
+        <div class="table-placeholder">
+            <div class="th-row">
+                <span>Request ID</span>
+                <span>Username</span>
+                <span>Request Type</span>
+                <span>Device Name</span>
+                <span>Access Point</span>
+                <span>Requested On</span>
+            </div>
+            <div class="td-row">
+                <span style="color: var(--gray-5); padding: 40px 14px; grid-column: 1/-1; text-align: center;">No Requests to Show</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleDropdown(forceState) {
+            const dropdown = document.getElementById('user-dropdown');
+            const trigger = document.getElementById('user-menu-trigger');
+            const overlay = document.getElementById('overlay');
+            const callout = document.getElementById('callout');
+
+            const isOpen = typeof forceState === 'boolean' ? forceState : !dropdown.classList.contains('open');
+
+            if (isOpen) {
+                dropdown.classList.add('open');
+                trigger.classList.add('open');
+                overlay.classList.add('open');
+                callout.style.display = 'none';
+            } else {
+                dropdown.classList.remove('open');
+                trigger.classList.remove('open');
+                overlay.classList.remove('open');
+            }
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') toggleDropdown(false);
+        });
+    </script>
+
+</body>
+</html>
