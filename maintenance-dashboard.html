@@ -142,6 +142,33 @@
             border-color: rgba(255,255,255,0.5);
         }
 
+        .demo-btn {
+            font-size: 11px;
+            font-weight: 600;
+            padding: 3px 10px;
+            border-radius: 4px;
+            border: none;
+            cursor: pointer;
+            font-family: var(--font);
+            background: transparent;
+            color: rgba(255,255,255,0.6);
+            transition: all 0.15s;
+        }
+
+        .demo-btn.active {
+            background: rgba(255,255,255,0.2);
+            color: white;
+        }
+
+        .demo-btn:hover:not(.active) {
+            color: rgba(255,255,255,0.85);
+        }
+
+        /* AM-only sections hidden when demo is in AP mode */
+        body.device-ap .am-only {
+            display: none !important;
+        }
+
         /* ═══════════════════════════════════════════
            DASHBOARD TABS
            ═══════════════════════════════════════════ */
@@ -337,6 +364,29 @@
         .badge-dot.green { background: var(--green-badge-text); }
         .badge-dot.orange { background: var(--warning-text); }
         .badge-dot.red { background: var(--critical-red); }
+
+        .status-badge {
+            font-size: 11px;
+            font-weight: 600;
+            padding: 3px 10px;
+            border-radius: 100px;
+            white-space: nowrap;
+        }
+
+        .badge-success {
+            background: var(--green-badge-bg);
+            color: var(--green-badge-text);
+        }
+
+        .badge-warning {
+            background: #FFF3CD;
+            color: #856404;
+        }
+
+        .badge-error {
+            background: #F8D7DA;
+            color: #721C24;
+        }
 
         .card-label {
             font-size: 12px;
@@ -998,6 +1048,45 @@
             animation: fadeIn 0.2s ease;
         }
 
+        .wizard-device-picker {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .wizard-device-option {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            padding: 14px 16px;
+            border: 2px solid var(--gray-2);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: border-color 0.15s, background 0.15s;
+        }
+
+        .wizard-device-option input {
+            position: absolute;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .wizard-device-option.selected {
+            border-color: var(--primary-purple);
+            background: var(--primary-purple-light);
+        }
+
+        .wizard-device-option-title {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--gray-9);
+        }
+
+        .wizard-device-option-desc {
+            font-size: 11px;
+            color: var(--gray-7);
+        }
+
         /* Utility */
         .mt-16 { margin-top: 16px; }
         .mb-8 { margin-bottom: 8px; }
@@ -1030,10 +1119,11 @@
         </div>
         <div style="display: flex; align-items: center; gap: 16px;">
             <!-- DEMO TOGGLE - not part of real UI -->
-            <div style="display: flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.08); border: 1px dashed rgba(255,255,255,0.3); padding: 4px 12px; border-radius: 100px;">
+            <div style="display: flex; align-items: center; gap: 6px; background: rgba(255,255,255,0.08); border: 1px dashed rgba(255,255,255,0.3); padding: 4px 10px; border-radius: 100px;">
                 <span style="font-size: 9px; color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: 1px;">Demo</span>
-                <button id="toggle-setup" onclick="switchSystemState('setup')" style="font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 4px; border: none; cursor: pointer; font-family: var(--font); background: transparent; color: rgba(255,255,255,0.6);">Setup</button>
-                <button id="toggle-running" onclick="switchSystemState('running')" style="font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 4px; border: none; cursor: pointer; font-family: var(--font); background: rgba(255,255,255,0.2); color: white;">Running</button>
+                <button class="demo-btn" id="toggle-setup" onclick="switchSystemState('setup')">Setup</button>
+                <button class="demo-btn active" id="toggle-am" onclick="switchSystemState('am')">AM</button>
+                <button class="demo-btn" id="toggle-ap" onclick="switchSystemState('ap')">AP</button>
             </div>
             <button class="btn-back-to-app" onclick="showToast('Navigating back to xDome Secure Access...', 'info')">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
@@ -1052,14 +1142,14 @@
                     <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--primary-purple)" stroke-width="2"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.24 6.24a2.12 2.12 0 01-3-3l6.24-6.24A6 6 0 0114.7 6.3z"/></svg>
                 </div>
                 <h1 class="dashboard-title" style="font-size: 22px;">Initial System Setup</h1>
-                <p class="dashboard-subtitle" style="margin-top: 4px;">Configure your Access Manager's infrastructure before going live</p>
+                <p class="dashboard-subtitle" id="setup-subtitle" style="margin-top: 4px;">Configure your device before going live</p>
             </div>
 
             <!-- Progress Steps -->
             <div style="display: flex; align-items: center; justify-content: center; gap: 0; margin-bottom: 40px;">
                 <div class="wizard-step active" data-step="1">
                     <div class="wizard-step-circle">1</div>
-                    <span>Cluster</span>
+                    <span>Device</span>
                 </div>
                 <div class="wizard-step-line active"></div>
                 <div class="wizard-step" data-step="2">
@@ -1083,85 +1173,110 @@
                 </div>
             </div>
 
-            <!-- Wizard Step 1: Cluster -->
+            <!-- Wizard Step 1: Device & Cluster -->
             <div class="wizard-panel" id="wizard-step-1">
                 <div class="section-panel open" style="margin-bottom: 0;">
                     <div class="section-header" style="cursor: default;">
                         <div class="section-header-left">
                             <div class="section-header-icon">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="8" rx="2"/><rect x="2" y="14" width="20" height="8" rx="2"/><circle cx="6" cy="6" r="1"/><circle cx="6" cy="18" r="1"/></svg>
                             </div>
                             <div>
-                                <div class="section-title">Step 1: Cluster Configuration</div>
-                                <div class="section-subtitle">Define this node's role and cluster membership</div>
+                                <div class="section-title">Step 1: Device & Deployment</div>
+                                <div class="section-subtitle">Select device type and whether this machine runs standalone or in a cluster</div>
                             </div>
                         </div>
                     </div>
                     <div class="section-body">
                         <div class="form-group">
-                            <label class="form-label">Join existing cluster?</label>
-                            <select class="form-input form-select" id="wizard-join-select" onchange="toggleJoinFields()">
-                                <option value="new" selected>No - initialize a new cluster</option>
-                                <option value="join">Yes - join an existing cluster</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">This Node's Role</label>
-                            <select class="form-input form-select">
-                                <option>Server (control plane)</option>
-                                <option>Agent (worker only)</option>
-                            </select>
-                            <p class="text-sm text-gray" style="margin-top: 4px;">Server nodes run the K8s API and scheduler. Agent nodes only run workloads. Minimum 3 server nodes for HA.</p>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Node Hostname</label>
-                            <input class="form-input" type="text" placeholder="e.g., am-headquarters-01" />
-                            <p class="text-sm text-gray" style="margin-top: 4px;">Must be unique across the cluster</p>
+                            <label class="form-label">Device Type</label>
+                            <div class="wizard-device-picker">
+                                <label class="wizard-device-option selected" id="wizard-device-am">
+                                    <input type="radio" name="wizard-device" value="am" checked onchange="toggleWizardSetupOptions()" />
+                                    <span class="wizard-device-option-title">Access Manager</span>
+                                    <span class="wizard-device-option-desc">Central management node</span>
+                                </label>
+                                <label class="wizard-device-option" id="wizard-device-ap">
+                                    <input type="radio" name="wizard-device" value="ap" onchange="toggleWizardSetupOptions()" />
+                                    <span class="wizard-device-option-title">Access Point</span>
+                                    <span class="wizard-device-option-desc">Remote access gateway</span>
+                                </label>
+                            </div>
                         </div>
 
-                        <!-- Fields shown only when CREATING a new cluster -->
-                        <div id="wizard-new-fields">
+                        <div class="form-group">
+                            <label class="form-label">Deployment Mode</label>
+                            <select class="form-input form-select" id="wizard-deployment-select" onchange="toggleWizardSetupOptions()">
+                                <option value="single" selected>Single hardware (standalone)</option>
+                                <option value="cluster">Cluster (multiple nodes)</option>
+                            </select>
+                            <p class="text-sm text-gray" style="margin-top: 4px;">Most sites use a single appliance. Choose cluster only when running multiple nodes together.</p>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Hostname</label>
+                            <input class="form-input" type="text" id="wizard-hostname" placeholder="e.g., am-headquarters-01" />
+                        </div>
+
+                        <!-- Cluster options - only when deployment mode is cluster -->
+                        <div id="wizard-cluster-fields" style="display: none;">
                             <div style="border-top: 1px solid var(--gray-2); padding-top: 16px; margin-top: 8px;">
-                                <p class="text-sm" style="font-weight: 600; margin-bottom: 12px; color: var(--primary-purple);">New Cluster Settings</p>
+                                <p class="text-sm" style="font-weight: 600; margin-bottom: 12px; color: var(--primary-purple);">Cluster Configuration</p>
                             </div>
                             <div class="form-group">
-                                <label class="form-label">Cluster Name</label>
-                                <input class="form-input" type="text" placeholder="e.g., headquarters-cluster" />
+                                <label class="form-label">Join existing cluster?</label>
+                                <select class="form-input form-select" id="wizard-join-select" onchange="toggleJoinFields()">
+                                    <option value="new" selected>No - initialize a new cluster</option>
+                                    <option value="join">Yes - join an existing cluster</option>
+                                </select>
                             </div>
                             <div class="form-group">
-                                <label class="form-label">Cluster Token (pre-shared secret)</label>
-                                <div style="display: flex; gap: 8px;">
-                                    <input class="form-input" type="text" id="wizard-token-field" placeholder="Auto-generated if left empty" style="flex: 1;" />
-                                    <button class="btn btn-ghost" onclick="document.getElementById('wizard-token-field').value = 'K10' + Math.random().toString(36).slice(2,8) + '.' + Math.random().toString(36).slice(2,18); showToast('Token generated', 'info')" style="white-space: nowrap;">Generate</button>
+                                <label class="form-label">This Node's Role</label>
+                                <select class="form-input form-select">
+                                    <option>Server (control plane)</option>
+                                    <option>Agent (worker only)</option>
+                                </select>
+                                <p class="text-sm text-gray" style="margin-top: 4px;">Server nodes run the K8s API and scheduler. Agent nodes only run workloads. Minimum 3 server nodes for HA.</p>
+                            </div>
+
+                            <!-- Fields shown only when CREATING a new cluster -->
+                            <div id="wizard-new-fields">
+                                <div class="form-group">
+                                    <label class="form-label">Cluster Name</label>
+                                    <input class="form-input" type="text" placeholder="e.g., headquarters-cluster" />
                                 </div>
-                                <p class="text-sm text-gray" style="margin-top: 4px;">Used to authenticate other nodes joining this cluster. Keep it secret.</p>
+                                <div class="form-group">
+                                    <label class="form-label">Cluster Token (pre-shared secret)</label>
+                                    <div style="display: flex; gap: 8px;">
+                                        <input class="form-input" type="text" id="wizard-token-field" placeholder="Auto-generated if left empty" style="flex: 1;" />
+                                        <button class="btn btn-ghost" onclick="document.getElementById('wizard-token-field').value = 'K10' + Math.random().toString(36).slice(2,8) + '.' + Math.random().toString(36).slice(2,18); showToast('Token generated', 'info')" style="white-space: nowrap;">Generate</button>
+                                    </div>
+                                    <p class="text-sm text-gray" style="margin-top: 4px;">Used to authenticate other nodes joining this cluster. Keep it secret.</p>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">TLS Subject Alternative Names (optional)</label>
+                                    <input class="form-input" type="text" placeholder="e.g., cluster-vip.company.com, 10.0.0.100" />
+                                    <p class="text-sm text-gray" style="margin-top: 4px;">Additional IPs/hostnames for the API server certificate (for load balancer or HA DNS)</p>
+                                </div>
                             </div>
-                            <div class="form-group">
-                                <label class="form-label">TLS Subject Alternative Names (optional)</label>
-                                <input class="form-input" type="text" placeholder="e.g., cluster-vip.company.com, 10.0.0.100" />
-                                <p class="text-sm text-gray" style="margin-top: 4px;">Additional IPs/hostnames for the API server certificate (for load balancer or HA DNS)</p>
-                            </div>
-                        </div>
 
-                        <!-- Fields shown only when JOINING an existing cluster -->
-                        <div id="wizard-join-fields" style="display: none;">
-                            <div style="border-top: 1px solid var(--gray-2); padding-top: 16px; margin-top: 8px;">
-                                <p class="text-sm" style="font-weight: 600; margin-bottom: 12px; color: var(--primary-purple);">Join Existing Cluster</p>
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label">Server URL (control plane endpoint)</label>
-                                <input class="form-input" type="text" placeholder="https://10.0.0.10:9345" />
-                                <p class="text-sm text-gray" style="margin-top: 4px;">IP or DNS of an existing server node, port 9345 (RKE2 registration port)</p>
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label">Join Token</label>
-                                <input class="form-input" type="text" placeholder="Paste token from existing server" />
-                                <p class="text-sm text-gray" style="margin-top: 4px;">Found at <code style="font-size: 11px; background: var(--gray-1); padding: 2px 5px; border-radius: 3px;">/var/lib/rancher/rke2/server/node-token</code> on the first server</p>
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label">CA Certificate Hash (optional, for verification)</label>
-                                <input class="form-input" type="text" placeholder="sha256:abc123..." />
-                                <p class="text-sm text-gray" style="margin-top: 4px;">Validates the control plane's root CA. Skipped if token-based discovery is trusted.</p>
+                            <!-- Fields shown only when JOINING an existing cluster -->
+                            <div id="wizard-join-fields" style="display: none;">
+                                <div class="form-group">
+                                    <label class="form-label">Server URL (control plane endpoint)</label>
+                                    <input class="form-input" type="text" placeholder="https://10.0.0.10:9345" />
+                                    <p class="text-sm text-gray" style="margin-top: 4px;">IP or DNS of an existing server node, port 9345 (RKE2 registration port)</p>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Join Token</label>
+                                    <input class="form-input" type="text" placeholder="Paste token from existing server" />
+                                    <p class="text-sm text-gray" style="margin-top: 4px;">Found at <code style="font-size: 11px; background: var(--gray-1); padding: 2px 5px; border-radius: 3px;">/var/lib/rancher/rke2/server/node-token</code> on the first server</p>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">CA Certificate Hash (optional, for verification)</label>
+                                    <input class="form-input" type="text" placeholder="sha256:abc123..." />
+                                    <p class="text-sm text-gray" style="margin-top: 4px;">Validates the control plane's root CA. Skipped if token-based discovery is trusted.</p>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -1296,9 +1411,13 @@
                     <div class="section-body">
                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
                             <div style="padding: 12px; background: var(--gray-1); border-radius: 6px;">
+                                <p class="text-sm" style="font-weight: 600; margin-bottom: 4px;">Device</p>
+                                <p class="text-sm text-gray" id="review-device">Access Manager</p>
+                                <p class="text-sm text-gray" id="review-deployment">Single hardware (standalone)</p>
+                            </div>
+                            <div style="padding: 12px; background: var(--gray-1); border-radius: 6px;" id="review-cluster-card">
                                 <p class="text-sm" style="font-weight: 600; margin-bottom: 4px;">Cluster</p>
-                                <p class="text-sm text-gray">New cluster - Server (control plane)</p>
-                                <p class="text-sm text-gray">Token: auto-generated</p>
+                                <p class="text-sm text-gray" id="review-cluster">Not applicable</p>
                             </div>
                             <div style="padding: 12px; background: var(--gray-1); border-radius: 6px;">
                                 <p class="text-sm" style="font-weight: 600; margin-bottom: 4px;">Storage</p>
@@ -1315,13 +1434,13 @@
                         </div>
                         <div style="background: var(--primary-purple-light); border-radius: 6px; padding: 12px; margin-top: 16px;">
                             <p class="text-sm" style="font-weight: 600; margin-bottom: 4px;">What happens next?</p>
-                            <p class="text-sm text-gray">The system will initialize RKE2, configure storage volumes, set up NTP synchronization, and install the xSA application. This process takes approximately 5-10 minutes.</p>
+                            <p class="text-sm text-gray" id="review-next-steps">The system will configure storage, set up NTP synchronization, and install the xSA application. This process takes approximately 5-10 minutes.</p>
                         </div>
                     </div>
                 </div>
                 <div style="display: flex; justify-content: space-between; margin-top: 16px;">
                     <button class="btn btn-ghost" onclick="wizardNext(4)">&larr; Back</button>
-                    <button class="btn btn-primary" onclick="showToast('Configuration applied! System is initializing...', 'success'); setTimeout(() => switchSystemState('running'), 2000);">
+                    <button class="btn btn-primary" onclick="applyWizardConfiguration()">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
                         Apply Configuration
                     </button>
@@ -1338,7 +1457,7 @@
         <div class="dashboard-title-row">
             <div>
                 <h1 class="dashboard-title">Maintenance Dashboard</h1>
-                <p class="dashboard-subtitle">Local infrastructure management for this Access Manager</p>
+                <p class="dashboard-subtitle" id="dashboard-subtitle">Local infrastructure management for this Access Manager</p>
             </div>
             <button class="btn btn-ghost" onclick="showToast('Generating diagnostics archive...', 'info')">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
@@ -1371,7 +1490,7 @@
                 Security & Licensing
             </div>
             <div class="tab-item" data-tab="operations">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.24 6.24a2.12 2.12 0 01-3-3l6.24-6.24A6 6 0 0114.7 6.3z"/></svg>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
                 Operations
             </div>
         </div>
@@ -1753,7 +1872,7 @@
                             Upload Certificate
                         </button>
                     </div>
-                    <div class="action-row">
+                    <div class="action-row am-only">
                         <div class="action-info">
                             <h4>Distribute to Access Points</h4>
                             <p>Push the active certificate to all connected Access Points</p>
@@ -1785,7 +1904,7 @@
                         </div>
                         <div>
                             <div class="section-title">Upgrades & Updates</div>
-                            <div class="section-subtitle">Application, infrastructure, and Access Point upgrades</div>
+                            <div class="section-subtitle">Application, infrastructure<span class="am-only">, and Access Point upgrades</span></div>
                         </div>
                     </div>
                     <svg class="section-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
@@ -1805,9 +1924,10 @@
                     <div class="action-row">
                         <div class="action-info">
                             <h4>Rancher / Kubernetes</h4>
-                            <p>Current: K8s v1.28.3</p>
+                            <p>Current: RKE2 v1.28.3+rke2r1</p>
                         </div>
                         <div class="action-buttons">
+                            <span class="status-badge badge-warning">Update available (v1.29.2)</span>
                             <button class="btn btn-outline" onclick="openModal('upgrade-modal')">Check for Updates</button>
                         </div>
                     </div>
@@ -1817,15 +1937,18 @@
                             <p>Current: CloudOS 2.1.0</p>
                         </div>
                         <div class="action-buttons">
+                            <span class="badge green"><span class="badge-dot green"></span> Up to date</span>
                             <button class="btn btn-outline" onclick="openModal('upgrade-modal')">Check for Updates</button>
                         </div>
                     </div>
-                    <div class="action-row">
+                    <div class="action-row am-only">
                         <div class="action-info">
                             <h4>Access Point Upgrades</h4>
                             <p>Push application upgrades to 100 connected Access Points</p>
+                            <p class="text-sm text-gray" style="margin-top: 2px;">12 APs pending update - 88 up to date</p>
                         </div>
                         <div class="action-buttons">
+                            <span class="status-badge badge-warning">12 pending</span>
                             <button class="btn btn-primary" onclick="openModal('ap-upgrade-modal')">Manage AP Upgrades</button>
                         </div>
                     </div>
@@ -1993,7 +2116,7 @@
                     <label class="form-label">Private Key (if separate)</label>
                     <input class="form-input" type="file" accept=".key,.pem" />
                 </div>
-                <div class="toggle-row">
+                <div class="toggle-row am-only">
                     <div class="toggle-label">
                         Auto-distribute to Access Points
                         <span>Immediately push the new certificate to all connected APs</span>
@@ -2400,29 +2523,118 @@
          ═══════════════════════════════════════════ -->
     <script>
         // ═══════════════════════════════════════════
-        // STATE TOGGLE: Setup vs Running
+        // STATE TOGGLE: Setup / AM / AP
         // ═══════════════════════════════════════════
         function switchSystemState(state) {
             const setupView = document.getElementById('setup-view');
             const runningView = document.getElementById('running-view');
-            const toggleSetup = document.getElementById('toggle-setup');
-            const toggleRunning = document.getElementById('toggle-running');
+            const hostBadge = document.querySelector('.maint-host-badge');
+            const subtitle = document.getElementById('dashboard-subtitle');
+
+            setupView.style.display = 'none';
+            runningView.style.display = 'none';
+            document.body.classList.remove('device-ap');
+            document.querySelectorAll('.demo-btn').forEach(b => b.classList.remove('active'));
 
             if (state === 'setup') {
                 setupView.style.display = 'block';
-                runningView.style.display = 'none';
-                toggleSetup.style.background = 'rgba(255,255,255,0.2)';
-                toggleSetup.style.color = 'white';
-                toggleRunning.style.background = 'transparent';
-                toggleRunning.style.color = 'rgba(255,255,255,0.6)';
-            } else {
-                setupView.style.display = 'none';
+                document.getElementById('toggle-setup').classList.add('active');
+                hostBadge.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="8" rx="2"/><rect x="2" y="14" width="20" height="8" rx="2"/><circle cx="6" cy="6" r="1"/><circle cx="6" cy="18" r="1"/></svg> New Device (unconfigured)';
+                wizardNext(1);
+                toggleWizardSetupOptions();
+            } else if (state === 'am') {
                 runningView.style.display = 'block';
-                toggleRunning.style.background = 'rgba(255,255,255,0.2)';
-                toggleRunning.style.color = 'white';
-                toggleSetup.style.background = 'transparent';
-                toggleSetup.style.color = 'rgba(255,255,255,0.6)';
+                document.getElementById('toggle-am').classList.add('active');
+                hostBadge.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="8" rx="2"/><rect x="2" y="14" width="20" height="8" rx="2"/><circle cx="6" cy="6" r="1"/><circle cx="6" cy="18" r="1"/></svg> Headquarters (AM #1)';
+                if (subtitle) subtitle.textContent = 'Local infrastructure management for this Access Manager';
+            } else if (state === 'ap') {
+                runningView.style.display = 'block';
+                document.body.classList.add('device-ap');
+                document.getElementById('toggle-ap').classList.add('active');
+                hostBadge.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="8" rx="2"/><rect x="2" y="14" width="20" height="8" rx="2"/><circle cx="6" cy="6" r="1"/><circle cx="6" cy="18" r="1"/></svg> Site-NYC (AP #3)';
+                if (subtitle) subtitle.textContent = 'Local infrastructure management for this Access Point';
             }
+        }
+
+        // ═══════════════════════════════════════════
+        // WIZARD: DEVICE TYPE & DEPLOYMENT MODE
+        // ═══════════════════════════════════════════
+        function getWizardDeviceType() {
+            const selected = document.querySelector('input[name="wizard-device"]:checked');
+            return selected ? selected.value : 'am';
+        }
+
+        function toggleWizardSetupOptions() {
+            const device = getWizardDeviceType();
+            const deployment = document.getElementById('wizard-deployment-select').value;
+            const clusterFields = document.getElementById('wizard-cluster-fields');
+            const hostnameInput = document.getElementById('wizard-hostname');
+            const subtitle = document.getElementById('setup-subtitle');
+
+            document.getElementById('wizard-device-am').classList.toggle('selected', device === 'am');
+            document.getElementById('wizard-device-ap').classList.toggle('selected', device === 'ap');
+
+            if (hostnameInput) {
+                hostnameInput.placeholder = device === 'ap' ? 'e.g., ap-site-nyc-01' : 'e.g., am-headquarters-01';
+            }
+
+            if (subtitle) {
+                subtitle.textContent = device === 'ap'
+                    ? 'Configure your Access Point before going live'
+                    : 'Configure your Access Manager before going live';
+            }
+
+            if (clusterFields) {
+                clusterFields.style.display = deployment === 'cluster' ? 'block' : 'none';
+            }
+
+            if (deployment === 'cluster') {
+                toggleJoinFields();
+            }
+
+            updateWizardReview();
+        }
+
+        function updateWizardReview() {
+            const device = getWizardDeviceType();
+            const deployment = document.getElementById('wizard-deployment-select').value;
+            const joinVal = document.getElementById('wizard-join-select')?.value;
+
+            const reviewDevice = document.getElementById('review-device');
+            const reviewDeployment = document.getElementById('review-deployment');
+            const reviewCluster = document.getElementById('review-cluster');
+            const reviewClusterCard = document.getElementById('review-cluster-card');
+            const reviewNextSteps = document.getElementById('review-next-steps');
+
+            if (reviewDevice) {
+                reviewDevice.textContent = device === 'ap' ? 'Access Point' : 'Access Manager';
+            }
+            if (reviewDeployment) {
+                reviewDeployment.textContent = deployment === 'cluster'
+                    ? 'Cluster deployment'
+                    : 'Single hardware (standalone)';
+            }
+            if (reviewCluster && reviewClusterCard) {
+                if (deployment === 'single') {
+                    reviewClusterCard.style.display = 'none';
+                } else {
+                    reviewClusterCard.style.display = 'block';
+                    reviewCluster.textContent = joinVal === 'join'
+                        ? 'Joining existing cluster'
+                        : 'New cluster - Server (control plane), token auto-generated';
+                }
+            }
+            if (reviewNextSteps) {
+                reviewNextSteps.textContent = deployment === 'cluster'
+                    ? 'The system will initialize RKE2, configure storage volumes, set up NTP synchronization, and install the xSA application. This process takes approximately 5-10 minutes.'
+                    : 'The system will configure storage, set up NTP synchronization, and install the xSA application. This process takes approximately 5-10 minutes.';
+            }
+        }
+
+        function applyWizardConfiguration() {
+            const device = getWizardDeviceType();
+            showToast('Configuration applied! System is initializing...', 'success');
+            setTimeout(() => switchSystemState(device), 2000);
         }
 
         // ═══════════════════════════════════════════
@@ -2432,6 +2644,7 @@
             const val = document.getElementById('wizard-join-select').value;
             document.getElementById('wizard-new-fields').style.display = val === 'new' ? 'block' : 'none';
             document.getElementById('wizard-join-fields').style.display = val === 'join' ? 'block' : 'none';
+            updateWizardReview();
         }
 
         // ═══════════════════════════════════════════
@@ -2450,6 +2663,8 @@
         function wizardNext(step) {
             document.querySelectorAll('.wizard-panel').forEach(p => p.style.display = 'none');
             document.getElementById('wizard-step-' + step).style.display = 'block';
+
+            if (step === 5) updateWizardReview();
 
             document.querySelectorAll('.wizard-step').forEach(s => {
                 const sNum = parseInt(s.dataset.step);
