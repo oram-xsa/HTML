@@ -5,45 +5,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>xDome Secure Access - Maintenance Dashboard</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="claroty-design-tokens.css">
     <style>
-        :root {
-            --header-bg: #2D1B4E;
-            --header-text: #FFFFFF;
-            --nav-active-underline: #00C48C;
-            --primary-purple: #4C338A;
-            --primary-purple-hover: #3B276B;
-            --primary-purple-light: rgba(76, 51, 138, 0.08);
-            --primary-purple-lighter: rgba(76, 51, 138, 0.04);
-            --table-header-bg: #2D1B4E;
-            --table-header-text: #FFFFFF;
-            --green-badge-bg: #EBFBEE;
-            --green-badge-text: #2B8A3E;
-            --green-solid: #00C48C;
-            --warning-bg: #FFF3BF;
-            --warning-text: #E67700;
-            --critical-red: #E03131;
-            --critical-bg: #FFF5F5;
-            --gray-1: #F8F9FA;
-            --gray-2: #E9ECEF;
-            --gray-3: #DEE2E6;
-            --gray-5: #ADB5BD;
-            --gray-7: #495057;
-            --gray-9: #212529;
-            --white: #FFFFFF;
-            --font: 'Montserrat', -apple-system, BlinkMacSystemFont, sans-serif;
-            --shadow-sm: 0 1px 3px rgba(0,0,0,0.06);
-            --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
-            --radius: 8px;
-            --radius-sm: 6px;
-        }
-
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
+            width: 100%;
+            min-height: 100dvh;
+            margin: 0;
             font-family: var(--font);
-            background: var(--gray-1);
-            color: var(--gray-9);
-            min-height: 100vh;
+            font-size: var(--mantine-font-size-md);
+            line-height: var(--mantine-line-height);
+            background-color: var(--color-background-page);
+            color: var(--mantine-color-text);
+            -webkit-font-smoothing: var(--mantine-webkit-font-smoothing);
+            -moz-osx-font-smoothing: var(--mantine-moz-osx-font-smoothing);
+            scroll-behavior: smooth;
         }
 
         /* ═══════════════════════════════════════════
@@ -222,8 +199,8 @@
         }
 
         .tab-item.active {
-            color: var(--primary-purple);
-            border-bottom-color: var(--primary-purple);
+            color: var(--color-brand);
+            border-bottom-color: var(--color-brand);
         }
 
         .tab-item .tab-count {
@@ -264,8 +241,8 @@
         }
 
         .card {
-            background: var(--white);
-            border: 1px solid var(--gray-2);
+            background: var(--color-background-card);
+            border: 1px solid var(--color-border);
             border-radius: var(--radius);
             padding: 20px;
             box-shadow: var(--shadow-sm);
@@ -379,13 +356,13 @@
         }
 
         .badge-warning {
-            background: #FFF3CD;
-            color: #856404;
+            background: var(--warning-bg);
+            color: var(--warning-text);
         }
 
         .badge-error {
-            background: #F8D7DA;
-            color: #721C24;
+            background: var(--critical-bg);
+            color: var(--critical-red);
         }
 
         .card-label {
@@ -434,8 +411,8 @@
            SECTION PANELS
            ═══════════════════════════════════════════ */
         .section-panel {
-            background: var(--white);
-            border: 1px solid var(--gray-2);
+            background: var(--color-background-box);
+            border: 1px solid var(--color-border);
             border-radius: var(--radius);
             margin-bottom: 16px;
             box-shadow: var(--shadow-sm);
@@ -453,7 +430,7 @@
         }
 
         .section-header:hover {
-            background: var(--gray-1);
+            background: var(--brand-primary--background-hover);
         }
 
         .section-header-left {
@@ -600,7 +577,7 @@
         }
 
         .btn-subtle:hover {
-            background: rgba(76, 51, 138, 0.14);
+            background: var(--brand-primary--background-solid-2);
         }
 
         .btn-danger {
@@ -733,7 +710,7 @@
 
         .form-input:focus {
             outline: none;
-            border-color: var(--primary-purple);
+            border-color: var(--color-focus-border);
             box-shadow: 0 0 0 2px var(--primary-purple-light);
         }
 
@@ -1640,7 +1617,7 @@
         <div class="tab-panel" id="tab-infrastructure">
 
             <!-- Cluster Management -->
-            <div class="section-panel open">
+            <div class="section-panel">
                 <div class="section-header" onclick="toggleSection(this)">
                     <div class="section-header-left">
                         <div class="section-header-icon">
@@ -1703,7 +1680,7 @@
             </div>
 
             <!-- Storage -->
-            <div class="section-panel open">
+            <div class="section-panel">
                 <div class="section-header" onclick="toggleSection(this)">
                     <div class="section-header-left">
                         <div class="section-header-icon">
@@ -1742,14 +1719,14 @@
                         <div style="display: flex; height: 32px; border-radius: 6px; overflow: hidden; border: 1px solid var(--gray-2);">
                             <div style="width: 16%; background: var(--primary-purple); display: flex; align-items: center; justify-content: center; color: white; font-size: 10px; font-weight: 600; min-width: 50px;">OS</div>
                             <div style="width: 40%; background: var(--green-solid); display: flex; align-items: center; justify-content: center; color: white; font-size: 10px; font-weight: 600;">App Data</div>
-                            <div style="width: 24%; background: #4DABF7; display: flex; align-items: center; justify-content: center; color: white; font-size: 10px; font-weight: 600;">Recordings</div>
+                            <div style="width: 24%; background: var(--color-def-blue9); display: flex; align-items: center; justify-content: center; color: white; font-size: 10px; font-weight: 600;">Recordings</div>
                             <div style="width: 12%; background: var(--warning-text); display: flex; align-items: center; justify-content: center; color: white; font-size: 10px; font-weight: 600;">Logs</div>
                             <div style="flex: 1; background: var(--gray-2); display: flex; align-items: center; justify-content: center; color: var(--gray-7); font-size: 10px; font-weight: 600;">Free</div>
                         </div>
                         <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin-top: 10px; font-size: 11px;">
                             <div style="display: flex; align-items: center; gap: 6px;"><span style="width: 8px; height: 8px; border-radius: 2px; background: var(--primary-purple);"></span><span>OS - 80 GB</span></div>
                             <div style="display: flex; align-items: center; gap: 6px;"><span style="width: 8px; height: 8px; border-radius: 2px; background: var(--green-solid);"></span><span>App Data - 200 GB</span></div>
-                            <div style="display: flex; align-items: center; gap: 6px;"><span style="width: 8px; height: 8px; border-radius: 2px; background: #4DABF7;"></span><span>Recordings - 120 GB</span></div>
+                            <div style="display: flex; align-items: center; gap: 6px;"><span style="width: 8px; height: 8px; border-radius: 2px; background: var(--color-def-blue9);"></span><span>Recordings - 120 GB</span></div>
                             <div style="display: flex; align-items: center; gap: 6px;"><span style="width: 8px; height: 8px; border-radius: 2px; background: var(--warning-text);"></span><span>Logs - 60 GB</span></div>
                             <div style="display: flex; align-items: center; gap: 6px;"><span style="width: 8px; height: 8px; border-radius: 2px; background: var(--gray-3);"></span><span>Free - 40 GB</span></div>
                         </div>
@@ -1799,7 +1776,7 @@
         <div class="tab-panel" id="tab-security">
 
             <!-- License -->
-            <div class="section-panel open">
+            <div class="section-panel">
                 <div class="section-header" onclick="toggleSection(this)">
                     <div class="section-header-left">
                         <div class="section-header-icon" style="background: var(--warning-bg); color: var(--warning-text);">
@@ -1841,7 +1818,7 @@
             </div>
 
             <!-- Certificates -->
-            <div class="section-panel open">
+            <div class="section-panel">
                 <div class="section-header" onclick="toggleSection(this)">
                     <div class="section-header-left">
                         <div class="section-header-icon">
@@ -1896,7 +1873,7 @@
         <div class="tab-panel" id="tab-operations">
 
             <!-- Upgrades -->
-            <div class="section-panel open">
+            <div class="section-panel">
                 <div class="section-header" onclick="toggleSection(this)">
                     <div class="section-header-left">
                         <div class="section-header-icon">
@@ -1965,7 +1942,7 @@
             </div>
 
             <!-- Backup & Restore -->
-            <div class="section-panel open">
+            <div class="section-panel">
                 <div class="section-header" onclick="toggleSection(this)">
                     <div class="section-header-left">
                         <div class="section-header-icon">
@@ -2375,8 +2352,8 @@
                             <option>worker-02 (Agent) - 10.0.0.12</option>
                         </select>
                     </div>
-                    <div style="background: #FFF3CD; border: 1px solid #FFEEBA; border-radius: 6px; padding: 10px; margin-top: 8px;">
-                        <p class="text-sm" style="font-weight: 600; color: #856404;">Warning: Removing a node will drain workloads first. This may cause brief service interruption if no other nodes can accept the pods.</p>
+                    <div style="background: var(--warning-bg); border: 1px solid var(--color-border); border-radius: 6px; padding: 10px; margin-top: 8px;">
+                        <p class="text-sm" style="font-weight: 600; color: var(--warning-text);">Warning: Removing a node will drain workloads first. This may cause brief service interruption if no other nodes can accept the pods.</p>
                     </div>
                 </div>
                 <!-- Rejoin fields -->
@@ -2391,8 +2368,8 @@
                         <input class="form-input" type="text" placeholder="Paste token from target cluster" />
                         <p class="text-sm text-gray" style="margin-top: 4px;">From <code style="font-size: 11px; background: var(--gray-1); padding: 2px 5px; border-radius: 3px;">/var/lib/rancher/rke2/server/node-token</code></p>
                     </div>
-                    <div style="background: #FFF3CD; border: 1px solid #FFEEBA; border-radius: 6px; padding: 10px; margin-top: 8px;">
-                        <p class="text-sm" style="font-weight: 600; color: #856404;">Warning: This will remove the node from its current cluster and join a different one. All local cluster state will be reset.</p>
+                    <div style="background: var(--warning-bg); border: 1px solid var(--color-border); border-radius: 6px; padding: 10px; margin-top: 8px;">
+                        <p class="text-sm" style="font-weight: 600; color: var(--warning-text);">Warning: This will remove the node from its current cluster and join a different one. All local cluster state will be reset.</p>
                     </div>
                 </div>
             </div>
