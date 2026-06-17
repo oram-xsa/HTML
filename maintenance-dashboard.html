@@ -27,7 +27,8 @@
            STANDALONE HEADER - dark purple bar
            ═══════════════════════════════════════════ */
         .maint-header {
-            background: var(--header-bg);
+            background: var(--header-bg, hsl(284deg, 20%, 9.6%));
+            color: var(--header-text, #fff);
             height: 56px;
             display: flex;
             align-items: center;
@@ -649,8 +650,8 @@
         }
 
         .data-table thead th {
-            background: var(--table-header-bg);
-            color: var(--table-header-text);
+            background: var(--table-header-bg, hsl(281deg, 37.5%, 16.5%));
+            color: var(--table-header-text, #fff);
             text-align: left;
             padding: 10px 14px;
             font-weight: 600;
