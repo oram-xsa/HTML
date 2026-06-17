@@ -378,41 +378,55 @@ html {
 
         .tab-bar {
             display: flex;
-            gap: 0;
-            border-bottom: 2px solid var(--gray-2);
+            gap: 4px;
+            background: var(--white);
+            border: 1px solid var(--gray-3);
+            border-radius: 8px;
+            padding: 4px 6px 0;
             margin-bottom: 24px;
+            box-shadow: var(--shadow-sm);
         }
 
         .tab-item {
-            padding: 10px 20px;
-            font-size: 13px;
+            padding: 12px 22px;
+            font-size: 14px;
             font-weight: 600;
-            color: var(--gray-7);
+            color: var(--gray-9);
             cursor: pointer;
-            border-bottom: 2px solid transparent;
-            margin-bottom: -2px;
-            transition: color 0.15s, border-color 0.15s;
+            border-bottom: 3px solid transparent;
+            margin-bottom: 0;
+            border-radius: 6px 6px 0 0;
+            transition: color 0.15s, border-color 0.15s, background 0.15s;
             user-select: none;
             display: flex;
             align-items: center;
             gap: 8px;
         }
 
+        .tab-item svg {
+            width: 18px;
+            height: 18px;
+            flex-shrink: 0;
+        }
+
         .tab-item:hover {
             color: var(--primary-purple);
+            background: var(--primary-purple-lighter);
         }
 
         .tab-item.active {
             color: var(--color-brand);
+            font-weight: 700;
             border-bottom-color: var(--color-brand);
+            background: var(--primary-purple-lighter);
         }
 
         .tab-item .tab-count {
-            background: var(--primary-purple-light);
-            color: var(--primary-purple);
+            background: var(--color-brand);
+            color: var(--white);
             font-size: 11px;
             font-weight: 700;
-            padding: 2px 7px;
+            padding: 2px 8px;
             border-radius: 100px;
         }
 
