@@ -5,8 +5,210 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>xDome Secure Access - Maintenance Dashboard</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="claroty-design-tokens.css">
-    <style>
+    <style id="claroty-design-tokens">
+/* Claroty xDome design tokens - extracted from production app (Mantine + brand scales) */
+
+:root[data-mantine-color-scheme="light"] {
+    --transparent: transparent;
+    --white: #fff;
+    --black: #000;
+
+    /* Blue scale (page backgrounds) */
+    --color-def-blue1: hsl(225deg, 60%, 99.4%);
+    --color-def-blue2: hsl(223deg, 100%, 98.6%);
+    --color-def-blue3: hsl(223deg, 98.4%, 97.1%);
+    --color-def-blue4: hsl(223deg, 92.9%, 95%);
+    --color-def-blue5: hsl(224deg, 87.1%, 92%);
+    --color-def-blue6: hsl(224deg, 81.9%, 87.8%);
+    --color-def-blue7: hsl(225deg, 77.4%, 82.1%);
+    --color-def-blue8: hsl(226deg, 75.4%, 74.5%);
+    --color-def-blue9: hsl(226deg, 70%, 55.5%);
+    --color-def-blue10: hsl(226deg, 58.6%, 51.3%);
+    --color-def-blue11: hsl(226deg, 55%, 45%);
+    --color-def-blue12: hsl(226deg, 62%, 17%);
+
+    /* Purple scale (brand) */
+    --color-def-purple1: hsl(280deg, 65%, 99.4%);
+    --color-def-purple2: hsl(276deg, 100%, 99%);
+    --color-def-purple3: hsl(276deg, 83.1%, 97%);
+    --color-def-purple4: hsl(275deg, 76.4%, 94.7%);
+    --color-def-purple5: hsl(275deg, 70.8%, 91.8%);
+    --color-def-purple6: hsl(274deg, 65.4%, 87.8%);
+    --color-def-purple7: hsl(273deg, 61%, 81.7%);
+    --color-def-purple8: hsl(272deg, 60%, 73.5%);
+    --color-def-purple9: hsl(272deg, 51%, 54%);
+    --color-def-purple10: hsl(272deg, 46.8%, 50.3%);
+    --color-def-purple11: hsl(272deg, 50%, 45.8%);
+    --color-def-purple12: hsl(272deg, 66%, 16%);
+
+    /* Dark purple scale (nav / headers) */
+    --color-def-dark-purple1: hsl(284deg, 20%, 9.6%);
+    --color-def-dark-purple2: hsl(283deg, 30%, 11.8%);
+    --color-def-dark-purple3: hsl(281deg, 37.5%, 16.5%);
+    --color-def-dark-purple4: hsl(280deg, 41.2%, 20%);
+    --color-def-dark-purple5: hsl(279deg, 43.8%, 23.3%);
+    --color-def-dark-purple6: hsl(277deg, 46.4%, 27.5%);
+    --color-def-dark-purple7: hsl(275deg, 49.3%, 34.6%);
+    --color-def-dark-purple8: hsl(272deg, 52.1%, 45.9%);
+    --color-def-dark-purple9: hsl(272deg, 51%, 54%);
+    --color-def-dark-purple10: hsl(273deg, 57.3%, 59.1%);
+    --color-def-dark-purple11: hsl(275deg, 80%, 71%);
+    --color-def-dark-purple12: hsl(279deg, 75%, 95.7%);
+
+    /* Red / orange severity scales */
+    --color-def-red11: hsl(358deg, 65%, 48.7%);
+    --color-def-red4: hsl(359deg, 100%, 95.6%);
+    --color-def-orange11: hsl(25deg, 30%, 41%);
+    --color-def-orange4: hsl(25deg, 100%, 92.2%);
+
+    /* Label / badge colors */
+    --label-color--1-text: hsl(358deg, 65%, 48.7%);
+    --label-color--1-background: hsl(360deg, 97.9%, 94.8%);
+    --label-color--11-text: hsl(153deg, 67%, 28.5%);
+    --label-color--11-background: hsl(140deg, 48.7%, 91%);
+    --label-color--13-text: hsl(24deg, 100%, 37%);
+    --label-color--13-background: hsl(25deg, 100%, 92.2%);
+    --label-color--8-text: hsl(211deg, 100%, 43.2%);
+    --label-color--8-background: hsl(210deg, 98.8%, 94%);
+
+    /* Gray scale */
+    --gray--scale-1: hsl(0deg, 0%, 99%);
+    --gray--scale-2: hsl(0deg, 0%, 97.3%);
+    --gray--scale-3: hsl(0deg, 0%, 95.1%);
+    --gray--scale-4: hsl(0deg, 0%, 93%);
+    --gray--scale-5: hsl(0deg, 0%, 90.9%);
+    --gray--scale-6: hsl(0deg, 0%, 88.7%);
+    --gray--scale-7: hsl(0deg, 0%, 85.8%);
+    --gray--scale-8: hsl(0deg, 0%, 78%);
+    --gray--scale-9: hsl(0deg, 0%, 56.1%);
+    --gray--scale-10: hsl(0deg, 0%, 52.3%);
+    --gray--scale-11: hsl(0deg, 0%, 43.5%);
+    --gray--scale-12: hsl(0deg, 0%, 9%);
+    --gray--text-1: var(--gray--scale-12);
+    --gray--text-2: var(--gray--scale-11);
+    --gray--text-3: var(--gray--scale-10);
+    --gray--border: var(--gray--scale-6);
+    --gray--border-strong: var(--gray--scale-8);
+    --gray--background-page: var(--gray--scale-1);
+    --gray--background-solid-1: var(--gray--scale-2);
+    --gray--background-solid-2: var(--gray--scale-3);
+    --gray--background-solid-3: var(--gray--scale-4);
+
+    --shadow--scale-5: hsl(272deg, 50%, 45.8% / 12%);
+
+    /* Mantine base */
+    --mantine-font-family: Montserrat, -apple-system, BlinkMacSystemFont, sans-serif;
+    --mantine-font-family-headings: Montserrat, -apple-system, BlinkMacSystemFont, sans-serif;
+    --mantine-font-size-md: 0.8rem;
+    --mantine-line-height: 1.55;
+    --mantine-color-text: #000;
+    --mantine-color-body: #fff;
+    --mantine-webkit-font-smoothing: antialiased;
+    --mantine-moz-font-smoothing: grayscale;
+    --mantine-radius-sm: 0.25rem;
+    --mantine-radius-default: 0.25rem;
+
+    /* App layout */
+    --navbar-default-height: 56px;
+    --button-default-radius: 0.25rem;
+    --button-default-height: 2rem;
+    --label-default-radius: 4px;
+    --badge-default-radius: 6px;
+    --shadow-small: 0px 2px 12px var(--shadow--scale-5);
+    --shadow-medium: 0px 4px 24px var(--shadow--scale-5);
+
+    /* Chrome fallbacks - must work even if brand block fails to match */
+    --header-bg: var(--color-def-dark-purple1);
+    --header-text: var(--white);
+    --nav-active-underline: hsl(160deg, 100%, 38%);
+    --mantine-moz-osx-font-smoothing: grayscale;
+}
+
+:root[data-brand="claroty"][data-mantine-color-scheme="light"],
+:root[data-brand="claroty"] {
+    --brand-primary--scale-9: var(--color-def-purple9);
+    --brand-primary--scale-10: var(--color-def-purple10);
+    --brand-primary--scale-11: var(--color-def-purple11);
+    --brand-primary--scale-12: var(--color-def-purple12);
+    --brand-primary--text-link: var(--color-def-purple9);
+    --brand-primary--background-hover: var(--color-def-purple3);
+    --brand-primary--background-solid-2: var(--color-def-purple4);
+    --brand-primary--border: var(--color-def-purple7);
+    --brand-primary-dark--scale-1: var(--color-def-dark-purple1);
+    --brand-primary-dark--scale-2: var(--color-def-dark-purple2);
+    --brand-primary-dark--scale-3: var(--color-def-dark-purple3);
+    --brand-primary-dark--scale-4: var(--color-def-dark-purple4);
+    --brand-primary-dark--scale-5: var(--color-def-dark-purple5);
+    --brand-primary-dark--scale-6: var(--color-def-dark-purple6);
+    --brand-primary-dark--scale-7: var(--color-def-dark-purple7);
+    --brand-primary-dark--scale-8: var(--color-def-dark-purple8);
+    --brand-primary-dark--scale-9: var(--color-def-dark-purple9);
+    --brand-primary-dark--scale-10: var(--color-def-dark-purple10);
+    --brand-primary-dark--scale-11: var(--color-def-dark-purple11);
+    --brand-primary-dark--scale-12: var(--color-def-dark-purple12);
+    --brand-primary-dark--text-inverse: var(--color-def-dark-purple1);
+
+    --color-brand: var(--brand-primary--scale-11);
+    --color-text-1: var(--gray--text-1);
+    --color-text-2: var(--gray--text-2);
+    --color-text-3: var(--gray--text-3);
+    --color-background-page: var(--color-def-blue2);
+    --color-background-box: var(--white);
+    --color-background-card: var(--color-background-box);
+    --color-background-header: var(--gray--background-solid-3);
+    --color-border: var(--gray--border);
+    --color-border-strong: var(--gray--border-strong);
+    --color-focus-border: var(--brand-primary--border);
+    --color-link: var(--brand-primary--text-link);
+    --color-shadow: var(--shadow--scale-5);
+    --color-level-low-text: var(--label-color--13-text);
+    --color-level-low-background: var(--label-color--13-background);
+    --color-level-info-text: var(--brand-primary--scale-11);
+    --color-level-info-background: var(--brand-primary--background-solid-2);
+
+    /* Wireframe / maintenance dashboard aliases */
+    --header-bg: var(--color-def-dark-purple1);
+    --header-text: var(--white);
+    --nav-active-underline: hsl(160deg, 100%, 38%);
+    --primary-purple: var(--color-brand);
+    --primary-purple-hover: var(--brand-primary--scale-10);
+    --primary-purple-light: var(--brand-primary--background-hover);
+    --primary-purple-lighter: var(--color-def-purple2);
+    --table-header-bg: var(--color-def-dark-purple3);
+    --table-header-text: var(--white);
+    --green-badge-bg: var(--label-color--11-background);
+    --green-badge-text: var(--label-color--11-text);
+    --green-solid: hsl(160deg, 100%, 38%);
+    --warning-bg: var(--label-color--13-background);
+    --warning-text: var(--label-color--13-text);
+    --critical-red: var(--label-color--1-text);
+    --critical-bg: var(--label-color--1-background);
+    --info-bg: var(--label-color--8-background);
+    --info-text: var(--label-color--8-text);
+    --gray-1: var(--color-background-page);
+    --gray-2: var(--gray--background-solid-1);
+    --gray-3: var(--color-border);
+    --gray-5: var(--gray--scale-9);
+    --gray-7: var(--color-text-2);
+    --gray-9: var(--color-text-1);
+    --font: var(--mantine-font-family);
+    --shadow-sm: var(--shadow-small);
+    --shadow-md: var(--shadow-medium);
+    --radius: var(--badge-default-radius);
+    --radius-sm: var(--button-default-radius);
+}
+
+html {
+    font-size: 16px;
+    --normal-font-size: 0.8rem;
+    --small-font-size: 0.75rem;
+    --large-font-size: 0.85rem;
+    --x-large-font-size: 0.9rem;
+    --default-line-height: 1.5;
+}
+
+    </style>
+<style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
