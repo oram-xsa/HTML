@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- maintenance-dashboard wireframe v0.3 -->
+<!-- maintenance-dashboard wireframe v0.4 -->
 <html lang="en" data-brand="claroty" data-mantine-color-scheme="light">
 <head>
     <meta charset="UTF-8">
@@ -120,9 +120,10 @@
     --shadow-medium: 0px 4px 24px var(--shadow--scale-5);
 
     /* Chrome fallbacks - must work even if brand block fails to match */
-    --header-bg: var(--color-def-dark-purple1);
+    /* Nav chrome - dark-purple1 is nearly black in browser; product reads as ~#2d1b4e */
+    --header-bg: hsl(261deg, 47%, 20%);
     --header-text: var(--white);
-    --nav-active-underline: hsl(160deg, 100%, 38%);
+    --nav-active-underline: #ebbc00;
     --mantine-moz-osx-font-smoothing: grayscale;
 }
 
@@ -169,15 +170,15 @@
     --color-level-info-background: var(--brand-primary--background-solid-2);
 
     /* Wireframe / maintenance dashboard aliases */
-    --header-bg: var(--color-def-dark-purple1);
+    --header-bg: hsl(261deg, 47%, 20%);
     --header-text: var(--white);
-    --nav-active-underline: hsl(160deg, 100%, 38%);
+    --nav-active-underline: #ebbc00;
     --primary-purple: var(--color-brand);
     --primary-purple-hover: var(--brand-primary--scale-10);
     --primary-purple-light: var(--brand-primary--background-hover);
     --primary-purple-lighter: var(--color-def-purple2);
-    --table-header-bg: var(--color-def-dark-purple3);
-    --table-header-text: var(--white);
+    --table-header-bg: var(--gray--background-solid-2);
+    --table-header-text: var(--color-text-2);
     --green-badge-bg: var(--label-color--11-background);
     --green-badge-text: var(--label-color--11-text);
     --green-solid: hsl(160deg, 100%, 38%);
@@ -231,7 +232,7 @@ html {
            STANDALONE HEADER - dark purple bar
            ═══════════════════════════════════════════ */
         .maint-header {
-            background: var(--header-bg, hsl(284deg, 20%, 9.6%));
+            background: var(--header-bg, hsl(261deg, 47%, 20%));
             color: var(--header-text, #fff);
             height: 56px;
             display: flex;
@@ -891,8 +892,8 @@ html {
         }
 
         .data-table thead th {
-            background: var(--table-header-bg, hsl(281deg, 37.5%, 16.5%));
-            color: var(--table-header-text, #fff);
+            background: var(--table-header-bg, var(--gray--background-solid-2));
+            color: var(--table-header-text, var(--color-text-2));
             text-align: left;
             padding: 10px 14px;
             font-weight: 600;
@@ -1303,7 +1304,7 @@ html {
                 <span style="font-size: 9px; color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: 1px;">Demo</span>
                 <button class="demo-btn" id="toggle-setup" onclick="switchSystemState('setup')">Setup</button>
                 <button class="demo-btn active" id="toggle-running" onclick="switchSystemState('running')">Running</button>
-                <span class="demo-version" title="Wireframe version for change tracking">v0.3</span>
+                <span class="demo-version" title="Wireframe version for change tracking">v0.4</span>
             </div>
             <button class="btn-back-to-app" onclick="showToast('Navigating back to xDome Secure Access...', 'info')">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
