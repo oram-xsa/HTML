@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<!-- maintenance-dashboard wireframe v0.3 -->
 <html lang="en" data-brand="claroty" data-mantine-color-scheme="light">
 <head>
     <meta charset="UTF-8">
@@ -345,9 +346,32 @@ html {
             color: rgba(255,255,255,0.85);
         }
 
-        /* AM-only sections hidden when demo is in AP mode */
-        body.device-ap .am-only {
-            display: none !important;
+        .demo-version {
+            font-size: 9px;
+            font-weight: 500;
+            color: rgba(255,255,255,0.28);
+            letter-spacing: 0.3px;
+            margin-left: 2px;
+            user-select: all;
+        }
+
+        /* Note on features unavailable on Access Point appliances */
+        .ap-unavailable-note {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            margin-top: 6px;
+            font-size: 11px;
+            line-height: 1.35;
+            color: var(--gray-6);
+            font-style: italic;
+        }
+
+        .ap-unavailable-note svg {
+            flex-shrink: 0;
+            width: 12px;
+            height: 12px;
+            opacity: 0.7;
         }
 
         /* ═══════════════════════════════════════════
@@ -1243,45 +1267,6 @@ html {
             animation: fadeIn 0.2s ease;
         }
 
-        .wizard-device-picker {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-        }
-
-        .wizard-device-option {
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-            padding: 14px 16px;
-            border: 2px solid var(--gray-2);
-            border-radius: 8px;
-            cursor: pointer;
-            transition: border-color 0.15s, background 0.15s;
-        }
-
-        .wizard-device-option input {
-            position: absolute;
-            opacity: 0;
-            pointer-events: none;
-        }
-
-        .wizard-device-option.selected {
-            border-color: var(--primary-purple);
-            background: var(--primary-purple-light);
-        }
-
-        .wizard-device-option-title {
-            font-size: 13px;
-            font-weight: 700;
-            color: var(--gray-9);
-        }
-
-        .wizard-device-option-desc {
-            font-size: 11px;
-            color: var(--gray-7);
-        }
-
         /* Utility */
         .mt-16 { margin-top: 16px; }
         .mb-8 { margin-bottom: 8px; }
@@ -1309,7 +1294,7 @@ html {
             </div>
             <span class="maint-host-badge">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="8" rx="2"/><rect x="2" y="14" width="20" height="8" rx="2"/><circle cx="6" cy="6" r="1"/><circle cx="6" cy="18" r="1"/></svg>
-                Headquarters (AM #1)
+                Headquarters
             </span>
         </div>
         <div style="display: flex; align-items: center; gap: 16px;">
@@ -1317,8 +1302,8 @@ html {
             <div style="display: flex; align-items: center; gap: 6px; background: rgba(255,255,255,0.08); border: 1px dashed rgba(255,255,255,0.3); padding: 4px 10px; border-radius: 100px;">
                 <span style="font-size: 9px; color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: 1px;">Demo</span>
                 <button class="demo-btn" id="toggle-setup" onclick="switchSystemState('setup')">Setup</button>
-                <button class="demo-btn active" id="toggle-am" onclick="switchSystemState('am')">AM</button>
-                <button class="demo-btn" id="toggle-ap" onclick="switchSystemState('ap')">AP</button>
+                <button class="demo-btn active" id="toggle-running" onclick="switchSystemState('running')">Running</button>
+                <span class="demo-version" title="Wireframe version for change tracking">v0.3</span>
             </div>
             <button class="btn-back-to-app" onclick="showToast('Navigating back to xDome Secure Access...', 'info')">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
@@ -1344,7 +1329,7 @@ html {
             <div style="display: flex; align-items: center; justify-content: center; gap: 0; margin-bottom: 40px;">
                 <div class="wizard-step active" data-step="1">
                     <div class="wizard-step-circle">1</div>
-                    <span>Device</span>
+                    <span>Deployment</span>
                 </div>
                 <div class="wizard-step-line active"></div>
                 <div class="wizard-step" data-step="2">
@@ -1368,7 +1353,7 @@ html {
                 </div>
             </div>
 
-            <!-- Wizard Step 1: Device & Cluster -->
+            <!-- Wizard Step 1: Deployment -->
             <div class="wizard-panel" id="wizard-step-1">
                 <div class="section-panel open" style="margin-bottom: 0;">
                     <div class="section-header" style="cursor: default;">
@@ -1377,28 +1362,12 @@ html {
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="8" rx="2"/><rect x="2" y="14" width="20" height="8" rx="2"/><circle cx="6" cy="6" r="1"/><circle cx="6" cy="18" r="1"/></svg>
                             </div>
                             <div>
-                                <div class="section-title">Step 1: Device & Deployment</div>
-                                <div class="section-subtitle">Select device type and whether this machine runs standalone or in a cluster</div>
+                                <div class="section-title">Step 1: Deployment</div>
+                                <div class="section-subtitle">Configure hostname and whether this machine runs standalone or in a cluster</div>
                             </div>
                         </div>
                     </div>
                     <div class="section-body">
-                        <div class="form-group">
-                            <label class="form-label">Device Type</label>
-                            <div class="wizard-device-picker">
-                                <label class="wizard-device-option selected" id="wizard-device-am">
-                                    <input type="radio" name="wizard-device" value="am" checked onchange="toggleWizardSetupOptions()" />
-                                    <span class="wizard-device-option-title">Access Manager</span>
-                                    <span class="wizard-device-option-desc">Central management node</span>
-                                </label>
-                                <label class="wizard-device-option" id="wizard-device-ap">
-                                    <input type="radio" name="wizard-device" value="ap" onchange="toggleWizardSetupOptions()" />
-                                    <span class="wizard-device-option-title">Access Point</span>
-                                    <span class="wizard-device-option-desc">Remote access gateway</span>
-                                </label>
-                            </div>
-                        </div>
-
                         <div class="form-group">
                             <label class="form-label">Deployment Mode</label>
                             <select class="form-input form-select" id="wizard-deployment-select" onchange="toggleWizardSetupOptions()">
@@ -1410,7 +1379,7 @@ html {
 
                         <div class="form-group">
                             <label class="form-label">Hostname</label>
-                            <input class="form-input" type="text" id="wizard-hostname" placeholder="e.g., am-headquarters-01" />
+                            <input class="form-input" type="text" id="wizard-hostname" placeholder="e.g., headquarters-01" oninput="updateWizardReview()" />
                         </div>
 
                         <!-- Cluster options - only when deployment mode is cluster -->
@@ -1606,9 +1575,9 @@ html {
                     <div class="section-body">
                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
                             <div style="padding: 12px; background: var(--gray-1); border-radius: 6px;">
-                                <p class="text-sm" style="font-weight: 600; margin-bottom: 4px;">Device</p>
-                                <p class="text-sm text-gray" id="review-device">Access Manager</p>
+                                <p class="text-sm" style="font-weight: 600; margin-bottom: 4px;">Deployment</p>
                                 <p class="text-sm text-gray" id="review-deployment">Single hardware (standalone)</p>
+                                <p class="text-sm text-gray" id="review-hostname">Hostname not set</p>
                             </div>
                             <div style="padding: 12px; background: var(--gray-1); border-radius: 6px;" id="review-cluster-card">
                                 <p class="text-sm" style="font-weight: 600; margin-bottom: 4px;">Cluster</p>
@@ -1652,7 +1621,7 @@ html {
         <div class="dashboard-title-row">
             <div>
                 <h1 class="dashboard-title">Maintenance Dashboard</h1>
-                <p class="dashboard-subtitle" id="dashboard-subtitle">Local infrastructure management for this Access Manager</p>
+                <p class="dashboard-subtitle">Local infrastructure management for this appliance</p>
             </div>
             <button class="btn btn-ghost" onclick="showToast('Generating diagnostics archive...', 'info')">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
@@ -2003,6 +1972,10 @@ html {
                         <div>
                             <div class="section-title">License Management</div>
                             <div class="section-subtitle">xSA product license and Access Point limits</div>
+                            <p class="ap-unavailable-note" style="margin-top: 4px; font-style: normal;">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                                Access Point limits are not shown on Access Point appliances
+                            </p>
                         </div>
                     </div>
                     <svg class="section-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
@@ -2019,6 +1992,10 @@ html {
                         <div class="action-info">
                             <h4>Access Points</h4>
                             <p>100 / 100 licensed Access Points in use</p>
+                            <p class="ap-unavailable-note">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                                Not available on Access Point appliances
+                            </p>
                         </div>
                         <span class="badge orange"><span class="badge-dot orange"></span> At Capacity</span>
                     </div>
@@ -2045,6 +2022,10 @@ html {
                         <div>
                             <div class="section-title">SSL Certificates</div>
                             <div class="section-subtitle">Manage and distribute certificates to Access Points</div>
+                            <p class="ap-unavailable-note" style="margin-top: 4px; font-style: normal;">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                                Certificate distribution is not available on Access Point appliances
+                            </p>
                         </div>
                     </div>
                     <svg class="section-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
@@ -2067,11 +2048,15 @@ html {
                             Upload Certificate
                         </button>
                     </div>
-                    <div class="action-row am-only">
+                    <div class="action-row">
                         <div class="action-info">
                             <h4>Distribute to Access Points</h4>
                             <p>Push the active certificate to all connected Access Points</p>
                             <p style="margin-top: 6px; font-size: 11px; color: var(--green-badge-text);">Zero downtime - distribution happens in the background without affecting active sessions</p>
+                            <p class="ap-unavailable-note">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                                Not available on Access Point appliances
+                            </p>
                         </div>
                         <div class="action-buttons" style="flex-direction: column; align-items: flex-end; gap: 4px;">
                             <div style="display: flex; align-items: center; gap: 8px;">
@@ -2099,7 +2084,7 @@ html {
                         </div>
                         <div>
                             <div class="section-title">Upgrades & Updates</div>
-                            <div class="section-subtitle">Application, infrastructure<span class="am-only">, and Access Point upgrades</span></div>
+                            <div class="section-subtitle">Application, infrastructure, and Access Point upgrades</div>
                         </div>
                     </div>
                     <svg class="section-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
@@ -2136,11 +2121,15 @@ html {
                             <button class="btn btn-outline" onclick="openModal('upgrade-modal')">Check for Updates</button>
                         </div>
                     </div>
-                    <div class="action-row am-only">
+                    <div class="action-row">
                         <div class="action-info">
                             <h4>Access Point Upgrades</h4>
                             <p>Push application upgrades to 100 connected Access Points</p>
                             <p class="text-sm text-gray" style="margin-top: 2px;">12 APs pending update - 88 up to date</p>
+                            <p class="ap-unavailable-note">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                                Not available on Access Point appliances
+                            </p>
                         </div>
                         <div class="action-buttons">
                             <span class="status-badge badge-warning">12 pending</span>
@@ -2168,7 +2157,7 @@ html {
                         </div>
                         <div>
                             <div class="section-title">Backup & Restore</div>
-                            <div class="section-subtitle">Snapshots and recovery for this Access Manager</div>
+                            <div class="section-subtitle">Snapshots and recovery for this appliance</div>
                         </div>
                     </div>
                     <svg class="section-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
@@ -2311,10 +2300,14 @@ html {
                     <label class="form-label">Private Key (if separate)</label>
                     <input class="form-input" type="file" accept=".key,.pem" />
                 </div>
-                <div class="toggle-row am-only">
+                <div class="toggle-row">
                     <div class="toggle-label">
                         Auto-distribute to Access Points
                         <span>Immediately push the new certificate to all connected APs</span>
+                        <p class="ap-unavailable-note" style="font-style: normal; margin-top: 4px;">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                            Not available on Access Point appliances
+                        </p>
                     </div>
                     <div class="toggle-switch on" onclick="this.classList.toggle('on')"></div>
                 </div>
@@ -2502,7 +2495,11 @@ html {
                 </button>
             </div>
             <div class="modal-body">
-                <p class="text-sm text-gray" style="margin-bottom: 16px;">Push the current Access Manager version to connected Access Points. APs will upgrade and reconnect automatically.</p>
+                <p class="text-sm text-gray" style="margin-bottom: 8px;">Push the current appliance version to connected Access Points. APs will upgrade and reconnect automatically.</p>
+                <p class="ap-unavailable-note" style="margin-bottom: 16px;">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                    Not available on Access Point appliances
+                </p>
                 <div class="flex-between" style="margin-bottom: 12px;">
                     <span class="text-sm"><strong>100</strong> Access Points connected</span>
                     <span class="badge green"><span class="badge-dot green"></span> All on v5.2.1</span>
@@ -2718,17 +2715,15 @@ html {
          ═══════════════════════════════════════════ -->
     <script>
         // ═══════════════════════════════════════════
-        // STATE TOGGLE: Setup / AM / AP
+        // STATE TOGGLE: Setup / Running
         // ═══════════════════════════════════════════
         function switchSystemState(state) {
             const setupView = document.getElementById('setup-view');
             const runningView = document.getElementById('running-view');
             const hostBadge = document.querySelector('.maint-host-badge');
-            const subtitle = document.getElementById('dashboard-subtitle');
 
             setupView.style.display = 'none';
             runningView.style.display = 'none';
-            document.body.classList.remove('device-ap');
             document.querySelectorAll('.demo-btn').forEach(b => b.classList.remove('active'));
 
             if (state === 'setup') {
@@ -2737,46 +2732,28 @@ html {
                 hostBadge.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="8" rx="2"/><rect x="2" y="14" width="20" height="8" rx="2"/><circle cx="6" cy="6" r="1"/><circle cx="6" cy="18" r="1"/></svg> New Device (unconfigured)';
                 wizardNext(1);
                 toggleWizardSetupOptions();
-            } else if (state === 'am') {
+            } else {
                 runningView.style.display = 'block';
-                document.getElementById('toggle-am').classList.add('active');
-                hostBadge.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="8" rx="2"/><rect x="2" y="14" width="20" height="8" rx="2"/><circle cx="6" cy="6" r="1"/><circle cx="6" cy="18" r="1"/></svg> Headquarters (AM #1)';
-                if (subtitle) subtitle.textContent = 'Local infrastructure management for this Access Manager';
-            } else if (state === 'ap') {
-                runningView.style.display = 'block';
-                document.body.classList.add('device-ap');
-                document.getElementById('toggle-ap').classList.add('active');
-                hostBadge.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="8" rx="2"/><rect x="2" y="14" width="20" height="8" rx="2"/><circle cx="6" cy="6" r="1"/><circle cx="6" cy="18" r="1"/></svg> Site-NYC (AP #3)';
-                if (subtitle) subtitle.textContent = 'Local infrastructure management for this Access Point';
+                document.getElementById('toggle-running').classList.add('active');
+                hostBadge.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="8" rx="2"/><rect x="2" y="14" width="20" height="8" rx="2"/><circle cx="6" cy="6" r="1"/><circle cx="6" cy="18" r="1"/></svg> Headquarters';
             }
         }
 
         // ═══════════════════════════════════════════
-        // WIZARD: DEVICE TYPE & DEPLOYMENT MODE
+        // WIZARD: DEPLOYMENT MODE
         // ═══════════════════════════════════════════
-        function getWizardDeviceType() {
-            const selected = document.querySelector('input[name="wizard-device"]:checked');
-            return selected ? selected.value : 'am';
-        }
-
         function toggleWizardSetupOptions() {
-            const device = getWizardDeviceType();
             const deployment = document.getElementById('wizard-deployment-select').value;
             const clusterFields = document.getElementById('wizard-cluster-fields');
             const hostnameInput = document.getElementById('wizard-hostname');
             const subtitle = document.getElementById('setup-subtitle');
 
-            document.getElementById('wizard-device-am').classList.toggle('selected', device === 'am');
-            document.getElementById('wizard-device-ap').classList.toggle('selected', device === 'ap');
-
             if (hostnameInput) {
-                hostnameInput.placeholder = device === 'ap' ? 'e.g., ap-site-nyc-01' : 'e.g., am-headquarters-01';
+                hostnameInput.placeholder = 'e.g., headquarters-01';
             }
 
             if (subtitle) {
-                subtitle.textContent = device === 'ap'
-                    ? 'Configure your Access Point before going live'
-                    : 'Configure your Access Manager before going live';
+                subtitle.textContent = 'Configure your appliance before going live';
             }
 
             if (clusterFields) {
@@ -2791,23 +2768,23 @@ html {
         }
 
         function updateWizardReview() {
-            const device = getWizardDeviceType();
             const deployment = document.getElementById('wizard-deployment-select').value;
             const joinVal = document.getElementById('wizard-join-select')?.value;
+            const hostname = document.getElementById('wizard-hostname')?.value?.trim();
 
-            const reviewDevice = document.getElementById('review-device');
             const reviewDeployment = document.getElementById('review-deployment');
+            const reviewHostname = document.getElementById('review-hostname');
             const reviewCluster = document.getElementById('review-cluster');
             const reviewClusterCard = document.getElementById('review-cluster-card');
             const reviewNextSteps = document.getElementById('review-next-steps');
 
-            if (reviewDevice) {
-                reviewDevice.textContent = device === 'ap' ? 'Access Point' : 'Access Manager';
-            }
             if (reviewDeployment) {
                 reviewDeployment.textContent = deployment === 'cluster'
                     ? 'Cluster deployment'
                     : 'Single hardware (standalone)';
+            }
+            if (reviewHostname) {
+                reviewHostname.textContent = hostname || 'Hostname not set';
             }
             if (reviewCluster && reviewClusterCard) {
                 if (deployment === 'single') {
@@ -2827,9 +2804,8 @@ html {
         }
 
         function applyWizardConfiguration() {
-            const device = getWizardDeviceType();
             showToast('Configuration applied! System is initializing...', 'success');
-            setTimeout(() => switchSystemState(device), 2000);
+            setTimeout(() => switchSystemState('running'), 2000);
         }
 
         // ═══════════════════════════════════════════
